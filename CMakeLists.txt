@@ -26,9 +26,18 @@ if(GIT_EXECUTABLE)
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   OUTPUT_VARIABLE LIRCH_BUILD_HASH
                   OUTPUT_STRIP_TRAILING_WHITESPACE)
+  execute_process(COMMAND "${GIT_EXECUTABLE}" submodule
+                  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+                  OUTPUT_VARIABLE LIRCH_SUBMODULES
+                  OUTPUT_STRIP_TRAILING_WHITESPACE)
 else(GIT_EXECUTABLE)
   set(LIRCH_BUILD_HASH "GIT_NOT_FOUND")
 endif(GIT_EXECUTABLE)
+# And warn about missing submodules
+if(NOT EXISTS "${CMAKE_SOURCE_DIR}/tclap/include")
+  message(WARNING "You should fetch the submodules. Required: ${LIRCH_SUBMODULES}")
+  message("From ${CMAKE_SOURCE_DIR}, run: git submodule update --init")
+endif(NOT EXISTS "${CMAKE_SOURCE_DIR}/tclap/include")
 
 # Create a log subdirectory in the build directory
 set(DEFAULT_LOG_DIRECTORY "${CMAKE_BINARY_DIR}/log")
@@ -87,7 +96,11 @@ add_preload_option("settingstester" BUILD_PLUGINS_EXTRA)
 # Any specific client requires certain preloads
 macro(add_preload PLUGIN_NAME PRELOADS)
   # FIXME this needs to use find_library or something for portability
-  set(LIBRARY_NAME "${LIBRARY_OUTPUT_PATH}/lib${PLUGIN_NAME}.so")
+  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(LIBRARY_NAME "${LIBRARY_OUTPUT_PATH}/lib${PLUGIN_NAME}.so")
+  else(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(LIBRARY_NAME "/usr/lib/lirch/lib${PLUGIN_NAME}.so")
+  endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
   set(${PRELOADS} "${${PRELOADS}}
 	{ \"${PLUGIN_NAME}\", \"${LIBRARY_NAME}\" },")
 endmacro(add_preload PLUGIN_NAME PRELOADS)
@@ -189,20 +202,98 @@ endif(BUILD_TESTING)
 
 ## PACKAGING
 
-# TODO how to get make package and cpack both to work?
-set(FROM_CMAKE_BUILD ON CACHE INTERNAL "Tag for make package" FORCE)
-# Initialize a global configuration
-set(CPACK_GENERATOR "STGZ;TGZ;TBZ2;TZ") # FIXME ZIP is broken for me
-set(CPACK_PROJECT_CONFIG_FILE "${CMAKE_SOURCE_DIR}/CPackConfig.cmake")
+# Initialize regular package
+#set(CPACK_PROJECT_CONFIG_FILE "${CMAKE_SOURCE_DIR}/CPackConfig.cmake")
+#include("${CPACK_PROJECT_CONFIG_FILE}")
+
+# CPackConfig.cmake
+include(InstallRequiredSystemLibraries)
+
+set(CPACK_PACKAGE_URL                  "https://www.github.com/m42a/Lirch/wiki")
+set(CPACK_PACKAGE_VENDOR               "The Addams Family")
+set(CPACK_PACKAGE_CONTACT              "Tor E. Hagemann <hagemt@rpi.edu>")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY  "A local IRC host (lirch)")
+
+set(CPACK_PACKAGE_DESCRIPTION_FILE     "${CMAKE_SOURCE_DIR}/NEWS")
+set(CPACK_RESOURCE_FILE_LICENSE        "${CMAKE_SOURCE_DIR}/LICENSE")
+set(CPACK_RESOURCE_FILE_README         "${CMAKE_SOURCE_DIR}/README.md")
+set(CPACK_RESOURCE_FILE_WELCOME        "${CMAKE_SOURCE_DIR}/NEWS")
+
+set(CPACK_PACKAGE_INSTALL_DIRECTORY    "${CPACK_PACKAGE_FILE_NAME} ${CPACK_PACKAGE_VERSION}")
+SET(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "${CPACK_PACKAGE_FILE_NAME} ${CPACK_PACKAGE_VERSION}")
+
+set(CPACK_PACKAGE_VERSION_MAJOR       "${LIRCH_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR       "${LIRCH_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH       "${LIRCH_VERSION_PATCH}")
+set(CPACK_PACKAGE_VERSION_TWEAK       "${LIRCH_VERSION_TWEAK}")
+
 if(UNIX)
-  list(APPEND CPACK_GENERATOR "DEB") # TODO also RPM/arch?
+  # TODO make sure this is what we need
+  #set(CPACK_DEBIAN_PACKAGE_DEPENDS      "package_name (>= min_version), ...")
+  # Obvious requirements: libdl libpthread libQtGui libQtNetwork libQtCore libQtTest? libc(6) libgcc libstdc++ libm
+  # Pulled from objdump -p on bin,lib: libpng libSM libICE libfreetype libXext libX11 libz libgthread libglib libgobject librt
+  # Referenced elsewhere: GLIBCXX_3.4.14 CXXABI_1.3.5 GCC_3.0 GLIBC_2.2.5
+  set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqtcore4 (>= 4:4.8.0), libqtgui4 (>= 4:4.8.0), libqt4-network (>= 4:4.8.1-0ubuntu4), libncursesw5 (>= 5.9-4)")
+  # TODO work out optional/recommended
+  set(CPACK_DEBIAN_PACKAGE_SUGGESTS "fortune-mod (>= 1:1.99.1-4)")
+  # TODO find a neater way
+  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+  set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
+  endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+  # Similar projects are in 'net'
+  set(CPACK_DEBIAN_PACKAGE_SECTION "net")
+
+  # TODO is any of this necessary for us? (if so, make it portable)
+  #list(APPEND CPACK_SOURCE_STRIP_FILES "${CMAKE_BUILD_DIR}/lirch_constants.h")
+  #set(CPACK_SOURCE_IGNORE_FILES "\\.swp$;.*~")
+  #set(CPACK_SOURCE_PACKAGE_FILE_NAME "lirch-src")
+
+  # Strip binaries
+  list(APPEND CPACK_STRIP_FILES "${EXECUTABLE_OUTPUT_PATH}/lirch")
+  if(BUILD_PLUGINS)
+    list(APPEND CPACK_STRIP_FILES "${LIBRARY_OUTPUT_PATH}/libantenna.so")
+    list(APPEND CPACK_STRIP_FILES "${LIBRARY_OUTPUT_PATH}/liblogger.so")
+    list(APPEND CPACK_STRIP_FILES "${LIBRARY_OUTPUT_PATH}/libmasseuse.so")
+    list(APPEND CPACK_STRIP_FILES "${LIBRARY_OUTPUT_PATH}/libmeatgrinder.so")
+    list(APPEND CPACK_STRIP_FILES "${LIBRARY_OUTPUT_PATH}/libquip.so")
+    list(APPEND CPACK_STRIP_FILES "${LIBRARY_OUTPUT_PATH}/libuserlist.so")
+  endif(BUILD_PLUGINS)
+  if(BUILD_BASIC_CLIENT)
+    list(APPEND CPACK_STRIP_FILES "${LIBRARY_OUTPUT_PATH}/liblirch-basic.so")
+    list(APPEND CPACK_STRIP_FILES "${EXECUTABLE_OUTPUT_PATH}/blirch")
+  endif(BUILD_BASIC_CLIENT)
+  if(BUILD_CURSES_CLIENT)
+    list(APPEND CPACK_STRIP_FILES "${LIBRARY_OUTPUT_PATH}/liblirch-curses.so")
+    list(APPEND CPACK_STRIP_FILES "${EXECUTABLE_OUTPUT_PATH}/clirch")
+  endif(BUILD_CURSES_CLIENT)
+  if(BUILD_QT_CLIENT)
+    list(APPEND CPACK_STRIP_FILES "${LIBRARY_OUTPUT_PATH}/liblirch-gui.so")
+    list(APPEND CPACK_STRIP_FILES "${EXECUTABLE_OUTPUT_PATH}/qlirch")
+  endif(BUILD_QT_CLIENT)
 endif(UNIX)
+
+# For NSIS on native Windows
 if(WIN32 AND NOT UNIX)
-  list(APPEND CPACK_GENERATOR "NSIS") # TODO doesn't work
+  set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/ui/qt/images/lirch.ico")
+  set(CPACK_NSIS_INSTALLED_ICON_NAME "${CMAKE_BUILD_DIR}/bin/lirch.exe")
+  set(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY} ${CPACK_DESCRIPTION_SUMMARY}")
+  set(CPACK_NSIS_HELP_LINK "${CPACK_PACKAGE_URL}")
+  set(CPACK_NSIS_URL_INFO_ABOUT "${CPACK_PACKAGE_URL}")
+  set(CPACK_NSIS_CONTACT "${CPACK_PACKAGE_CONTACT}")
+  set(CPACK_NSIS_MODIFY_PATH ON)
 endif(WIN32 AND NOT UNIX)
-include("${CPACK_PROJECT_CONFIG_FILE}")
+
+# Shortcuts
+if(BUILD_CURSES_CLIENT)
+  list(APPEND CPACK_PACKAGE_EXECUTABLES "clirch" "Lirch (console)")
+endif(BUILD_CURSES_CLIENT)
+if(BUILD_QT_CLIENT)
+  list(APPEND CPACK_PACKAGE_EXECUTABLES "qlirch" "Lirch (gui)")
+endif(BUILD_QT_CLIENT)
+
 # Initialize source packaging (for future use)
 #set(CPACK_SOURCE_PROJECT_CONFIG_FILE "${CMAKE_SOURCE_DIR}/CPackSourceConfig.cmake")
 #include("${CPACK_SOURCE_PROJECT_CONFIG_FILE}")
+
 # Include the proper modules for packaging
 include(CPack)
