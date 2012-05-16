@@ -199,35 +199,36 @@ void LirchQtInterface::on_actionSaveLog_triggered()
 {
 	QString filename = QFileDialog::getSaveFileName(this, tr("Save Log File"), "./", tr("Logs (*.log)"));
 	if (!filename.isEmpty()) {
+		QFile file(filename);
 		// Begin the save process, get all necessary data
-		QFile *file = new QFile(filename);
 		auto tab_widget = ui->chatTabWidget;
 		auto itr = channels.find(tab_widget->tabText(tab_widget->currentIndex()));
-		if (itr != channels.end() && file->open(QIODevice::WriteOnly | QIODevice::Text)) {
+		if (itr != channels.end() && file.open(QIODevice::WriteOnly | QIODevice::Text)) {
 			auto channel = itr.value();
-			// Give the user some feedback with a widget
-			QWidget *feedback = new QWidget(this, Qt::Dialog);
-			feedback->setWindowModality(Qt::ApplicationModal);
-			QProgressBar *progress_bar = new QProgressBar(feedback);
-			QBoxLayout *layout = new QBoxLayout(QBoxLayout::Direction::TopToBottom);
-			layout->addWidget(progress_bar);
-			feedback->setLayout(layout);
-			// While we save the file in a thread
-			QThread *saving_thread = new QThread(this);
-			channel->prepare_persist(file);
-			channel->moveToThread(saving_thread);
-			// Begin, feeding back progress 
+			// Give the user some feedback with a widget (which blocks all other input)
+			QWidget *feedback_widget = new QWidget();
+			feedback_widget->setWindowModality(Qt::ApplicationModal);
+			QProgressBar *progress_bar = new QProgressBar(feedback_widget);
 			connect(channel, SIGNAL(progress(int)), progress_bar, SLOT(setValue(int)));
-			connect(saving_thread, SIGNAL(started()), channel, SLOT(persist()));
-			connect(saving_thread, SIGNAL(started()), feedback, SLOT(show()));
-			connect(channel, SIGNAL(persisted()), saving_thread, SLOT(quit()));
-			connect(saving_thread, SIGNAL(finished()), feedback, SLOT(close()));
-			connect(saving_thread, SIGNAL(finished()), file, SLOT(deleteLater()));
-			connect(saving_thread, SIGNAL(finished()), saving_thread, SLOT(deleteLater()));
-			saving_thread->start();
+			QBoxLayout *layout = new QBoxLayout(QBoxLayout::Direction::TopToBottom, feedback_widget);
+			layout->addWidget(progress_bar);
+			feedback_widget->setLayout(layout);
+			// Create a thread in which to receive the feedback
+			QThread *feedback_thread = new QThread();
+			// FIXME can't move widget to thread?
+			feedback_widget->moveToThread(feedback_thread);
+			// When the channel begins/finishes persisting, start/quit the feedback thread
+			connect(channel, SIGNAL(persisting()), feedback_thread, SLOT(start()));
+			connect(channel, SIGNAL(persisted()), feedback_thread, SLOT(quit()));
+			// On start/finish, the feedback thread should close the window (and cleanup)
+			connect(feedback_thread, SIGNAL(started()), feedback_widget, SLOT(show()));
+			connect(feedback_thread, SIGNAL(finished()), feedback_widget, SLOT(close()));
+			connect(feedback_thread, SIGNAL(finished()), feedback_widget, SLOT(deleteLater()));
+			connect(feedback_thread, SIGNAL(finished()), feedback_thread, SLOT(deleteLater()));
+			// Begin saving to file
+			channel->persist(file);
 		} else {
 			QMessageBox::information(this, tr("Error"), tr("Cannot save file: '%1'").arg(filename));
-			delete file;
 		}
 	}
 }

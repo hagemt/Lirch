@@ -7,8 +7,7 @@ LirchChannel::LirchChannel(const QString &channel_name, Ui::LirchQtInterface *ui
 	tabs(ui->chatTabWidget),
 	list(ui->chatUserList),
 	menu(ui->menuViewTab),
-	users(new QStandardItemModel(0, 1, list)),
-	stream(nullptr)
+	users(new QStandardItemModel(0, 1))
 {
 	// TODO Check to see if tab is duplicated
 	int index = tabs->currentIndex();
@@ -34,26 +33,26 @@ LirchChannel::LirchChannel(const QString &channel_name, Ui::LirchQtInterface *ui
 }
 
 LirchChannel::~LirchChannel() {
-	if (stream) {
-		delete stream;
-	}
 	// Remove the action/tab pair
 	menu->removeAction(action);
 	int index = tabs->indexOf(tab);
 	if (index != -1) {
 		tabs->removeTab(index);
 	}
-	// This triggers deletion of action, browser, document, and cursor
+	// This triggers deletion of browser, document, and cursor
 	delete tab;
+	// This triggers deletion of users (new tab should have grabbed its user list)
+	delete users;
 }
 
-void LirchChannel::show_message(const DisplayMessage &message, bool show_timestamp) {
+void LirchChannel::show_message(const DisplayedMessage &message, bool show_timestamp) {
 	if (show_timestamp) {
 		cursor->insertText("[" + message.timestamp + "] ");
 	}
 	cursor->insertHtml(message.text);
 	browser->ensureCursorVisible();
 	// TODO make this insert between lines
+	static QTextBlockFormat block_format;
 	cursor->insertBlock(block_format);
 }
 
@@ -68,32 +67,29 @@ void LirchChannel::update_users(const QSet<QString> &new_users) {
 void LirchChannel::add_message(const QString& text, bool show_timestamp, bool ignore_message) {
 	// Package the data so that we have it for reloads
 	QString timestamp = QTime::currentTime().toString();
-	DisplayMessage message(text, timestamp, ignore_message);
+	DisplayedMessage message(text, timestamp, ignore_message);
 	messages.append(message);
 	if (!ignore_message) {
 		show_message(message, show_timestamp);
 	}
 }
 
-void LirchChannel::prepare_persist(QFile * file) {
-	if (stream) {
-		delete stream;
+void LirchChannel::persist(QFile &file) const {
+	emit persisting();
+	// Persist the display messages to file using UTF-8
+	QTextStream stream(&file);
+	stream.setCodec("UTF-8");
+	// Report progress based on blocks
+	int num_blocks = document->blockCount();
+	QTextBlock block = document->begin();
+	for (int i = 0; i < num_blocks; ++i) {
+		emit progress(i * 100 / num_blocks);
+		// Write the block and advance
+		endl(stream << block.text());
+		block = block.next();
 	}
-	stream = new QTextStream(file);
-	stream->setCodec("UTF-8");
-}
-
-void LirchChannel::persist() const {
-	if (stream) {
-		int num_blocks = document->blockCount();
-		QTextBlock block = document->begin();
-		for (int i = 0; i < num_blocks; ++i) {
-			endl(*stream << block.text());
-			emit progress(i * 100 / num_blocks);
-			block = block.next();
-		}
-		emit progress(100);
-	}
+	emit progress(100);
+	// TODO Insert wait to make sure window works?
 	emit persisted();
 }
 
