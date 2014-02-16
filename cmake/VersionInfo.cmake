@@ -1,0 +1,52 @@
+function(project_version VERSION_INPUT)
+	# Parse VERSION_INPUT into tokens, padding with zeroes as necessary
+	string(REGEX REPLACE "\\." ";" VERSION_TOKENS "${VERSION_INPUT}")
+	list(APPEND VERSION_LIST ${VERSION_TOKENS})
+	list(LENGTH VERSION_LIST VERSION_LENGTH)
+	while(VERSION_LENGTH LESS 4)
+		list(APPEND VERSION_LIST 0)
+		list(LENGTH VERSION_LIST VERSION_LENGTH)
+	endwhile(VERSION_LENGTH LESS 4)
+	# These four fields comprise the version
+	list(GET VERSION_LIST 0 VERSION_MAJOR)
+	list(GET VERSION_LIST 1 VERSION_MINOR)
+	list(GET VERSION_LIST 2 VERSION_PATCH)
+	list(GET VERSION_LIST 3 VERSION_TWEAK)
+	if(VERSION_LENGTH GREATER 4)
+		message(AUTHOR_WARNING "PROJECT_VERSION: additional tokens ignored")
+	endif(VERSION_LENGTH GREATER 4)
+	set(VERSION_HIGH   "${VERSION_MAJOR}.${VERSION_MINOR}")
+	set(VERSION_LOW    "${VERSION_PATCH}.${VERSION_TWEAK}")
+	set(VERSION_LIB     "${VERSION_HIGH}.${VERSION_PATCH}")
+	set(VERSION_ALL     "${VERSION_HIGH}.${VERSION_LOW}"  )
+	set(VERSION_STRING "v${VERSION_ALL}")
+	if(VERSION_SUFFIX) # FIXME(teh)
+		set(VERSION_STRING "${VERSION_STRING}-${VERSION_SUFFIX}")
+	endif(VERSION_SUFFIX)
+	# Set ten variables in the parent scope, with the following namespace:
+	if(CMAKE_PROJECT_NAME)
+		string(TOUPPER "${CMAKE_PROJECT_NAME}" VERSION_PREFIX)
+	else(CMAKE_PROJECT_NAME)
+		set(VERSION_PREFIX "CMAKE_PROJECT")
+	endif(CMAKE_PROJECT_NAME)
+	# Four for major/minor/patch/tweak versions:
+	set(${VERSION_PREFIX}_VERSION_MAJOR  "${VERSION_MAJOR}"  PARENT_SCOPE)
+	set(${VERSION_PREFIX}_VERSION_MINOR  "${VERSION_MINOR}"  PARENT_SCOPE)
+	set(${VERSION_PREFIX}_VERSION_PATCH  "${VERSION_PATCH}"  PARENT_SCOPE)
+	set(${VERSION_PREFIX}_VERSION_TWEAK  "${VERSION_TWEAK}"  PARENT_SCOPE)
+	# Two for high and low pairs of the former:
+	set(${VERSION_PREFIX}_VERSION_HIGH   "${VERSION_HIGH}"   PARENT_SCOPE)
+	set(${VERSION_PREFIX}_VERSION_LOW    "${VERSION_LOW}"    PARENT_SCOPE)
+	# One for shared-object version (3-tuple: X.Y.Z)
+	set(${VERSION_PREFIX}_VERSION_SO     "${VERSION_LIB}"    PARENT_SCOPE)
+	# One for the overall version -- should match input?
+	set(${VERSION_PREFIX}_VERSION        "${VERSION_ALL}"    PARENT_SCOPE)
+	# One for extraneous version info TODO(teh): use build slug as suffix?
+	set(${VERSION_PREFIX}_VERSION_SUFFIX "${VERSION_SUFFIX}" PARENT_SCOPE)
+	# And lastly, the whole thing: vM.m.p.t(-s)? TODO(teh): nix v-prefix?
+	set(${VERSION_PREFIX}_VERSION_STRING "${VERSION_STRING}" PARENT_SCOPE)
+endfunction(project_version)
+
+if(PROJECT_VERSION)
+	project_version("${PROJECT_VERSION}")
+endif(PROJECT_VERSION)

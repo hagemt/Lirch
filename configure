@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+CMAKE_COMMAND="$(which cmake)"
+GIT_COMMAND="$(which git)"
+
+function fatal_error {
+	[[ -z "$1" ]] || echo "[FATAL] $1"
+	echo '[USAGE] run `configure` from the top directory of your clone'
+	echo '[HINT!] ensure you have recent verions of both cmake and git!'
+	exit 1
+}
+
+function configure_build {
+	[[ -x "$CMAKE_COMMAND" ]] || fatal_error "you need cmake to configure '$1'"
+	[[ -d "$1" ]] || mkdir "$1" || fatal_error "couldn't create '$1'"
+	pushd "$1" && "$CMAKE_COMMAND" ..; popd
+	#"$(which make)" -C "$BUILD_DIR" test
+}
+
+function bootstrap_build {
+	[[ -x "$GIT_COMMAND" ]] || fatal_error "you need git to configure"
+	local BUILD_DIR=build-$("$GIT_COMMAND" rev-parse HEAD)
+	[[ -d "$BUILD_DIR" ]] || configure_build "$BUILD_DIR"
+}
+
+bootstrap_build || fatal_error "bootstrap failed"

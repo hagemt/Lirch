@@ -1,0 +1,17 @@
+# TODO(teh): supply sensical FORMAT_STRING? (for use as path)
+string(TIMESTAMP CMAKE_PROJECT_BUILD_SLUG)
+
+# Find git and use it to fetch a hash
+find_program(GIT_EXECUTABLE git)
+if(GIT_EXECUTABLE)
+	execute_process(COMMAND "${GIT_EXECUTABLE}" rev-parse HEAD
+		WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+		OUTPUT_VARIABLE CMAKE_PROJECT_BUILD_SLUG
+		OUTPUT_STRIP_TRAILING_WHITESPACE)
+endif(GIT_EXECUTABLE)
+
+# TODO(teh): should we functionalize all of this?
+if(CMAKE_PROJECT_NAME)
+	string(TOUPPER "${CMAKE_PROJECT_NAME}_BUILD_SLUG" PROJECT_BUILD_SLUG)
+	set(${PROJECT_BUILD_SLUG} "${CMAKE_PROJECT_BUILD_SLUG}")
+endif(CMAKE_PROJECT_NAME)
