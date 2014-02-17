@@ -3,7 +3,7 @@
 
 #include "lirch/plugins/lirch_plugin.h"
 
-#include "lirch/plugins/extra/timer.h"
+#include "lirch/plugins/messages/timer.h"
 
 using namespace std;
 
