@@ -10,7 +10,7 @@
 
 #include <QString>
 
-#include "core/message.h"
+#include "lirch/core/message.h"
 
 
 enum class edict_message_subtype

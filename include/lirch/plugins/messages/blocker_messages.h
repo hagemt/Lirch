@@ -11,6 +11,7 @@
 #include <QHostAddress>
 
 #include "lirch/core/message.h"
+
 #include "lirch/plugins/hash/QHostAddress.h"
 
 //this nonsense is needed in order to have our blocklist be searchable

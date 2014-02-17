@@ -4,7 +4,7 @@
 
 #include <QtNetwork>
 
-#include "core/core_messages.h"
+#include "lirch/core/core_messages.h"
 
 #include "lirch/plugins/lirch_plugin.h"
 #include "lirch/plugins/user_status.h"

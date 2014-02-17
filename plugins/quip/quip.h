@@ -6,10 +6,12 @@
 #include <QString>
 #include <QProcess>
 
-#include "core/message.h"
-#include "core/message_view.h"
+#include "lirch/core/message.h"
+#include "lirch/core/message_view.h"
+#include "lirch/core/required_messages.h"
 
-#include "plugins/quip_messages.h"
+#include "lirch/plugins/messages/grinder_messages.h"
+#include "lirch/plugins/messages/quip_messages.h"
 
 // Encapsulates the internal name and a plugin's pipe (used for communication)
 class QuipPlugin

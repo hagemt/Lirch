@@ -8,7 +8,7 @@
 #include <QCoreApplication>
 #include <QObject>
 
-#include "core/message.h"
+#include "lirch/core/message.h"
 
 void run_core(const std::vector<message> &);
 
@@ -17,28 +17,28 @@ void run_core(const std::vector<message> &);
 
 // Can actually manage more than one client on single core?
 class lirch_core : public QObject {
-    Q_OBJECT;
+	Q_OBJECT
 	std::thread *core_thread;
-    std::vector<message> messages;
+	std::vector<message> messages;
 
 public:
-    constexpr static int EXEC_FAILURE = -1;
-    lirch_core(const std::vector<message> &pp) : core_thread(nullptr) {
+	constexpr static int EXEC_FAILURE = -1;
+	lirch_core(const std::vector<message> &pp) : core_thread(nullptr) {
 		// FIXME(teh): could pass app and handle connect here?
 		for (const message &m : pp) {
-            //std::cerr << "[DEBUG] " << m << " (core invocation)" << std::endl;
+			//std::cerr << "[DEBUG] " << m << " (core invocation)" << std::endl;
 			messages.push_back(m);
 		}
 	}
 
 	virtual ~lirch_core() {
 		if (core_thread) {
-            //std::cerr << "[WARNING] core still in use (will detach)" << std::endl;
+			//std::cerr << "[WARNING] core still in use (will detach)" << std::endl;
 			core_thread->detach();
 		}
 	}
 
-    int exec(QCoreApplication &app) {
+	int exec(QCoreApplication &app) {
 		if (core_thread) return EXEC_FAILURE;
 		core_thread = new std::thread([this, messages](){
 			run_core(messages);

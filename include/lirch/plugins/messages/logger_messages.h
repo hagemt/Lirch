@@ -6,7 +6,7 @@
 #include <QString>
 
 #include "lirch_constants.h"
-#include "core/message.h"
+#include "lirch/core/message.h"
 
 // A logging message configures logging of messages
 class logging_message : public message_data

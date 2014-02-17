@@ -1,7 +1,8 @@
 #include "lirch_constants.h"
-#include "lirch/ui/lirch_client_pipe.h"
 
 #include "lirch/plugins/lirch_plugin.h"
+
+#include "ui/lirch_client_pipe.h"
 
 void run(plugin_pipe p, std::string name) {
     // Register for the messages that pertain to the GUI

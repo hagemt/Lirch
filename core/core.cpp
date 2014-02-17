@@ -1,15 +1,15 @@
 #include <algorithm>
-#include <unordered_map>
+#include <iostream>
 #include <string>
 #include <thread>
-#include <iostream>
+#include <unordered_map>
 
-#include "message.h"
-#include "message_pipe.h"
-#include "registry.h"
-#include "plugin_loader.h"
-#include "required_messages.h"
-#include "core_messages.h"
+#include "lirch/core/core_messages.h"
+#include "lirch/core/message.h"
+#include "lirch/core/message_pipe.h"
+#include "lirch/core/registry.h"
+#include "lirch/core/required_messages.h"
+#include "lirch/core/plugin_loader.h"
 
 using namespace std;
 

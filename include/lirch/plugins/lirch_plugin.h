@@ -11,8 +11,8 @@
 
 #include <string>
 
-#include "core/message_view.h"
-#include "core/required_messages.h"
+#include "lirch/core/message_view.h"
+#include "lirch/core/required_messages.h"
 
 extern void
 run(plugin_pipe, std::string);

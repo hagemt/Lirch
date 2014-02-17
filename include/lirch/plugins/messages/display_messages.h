@@ -9,7 +9,7 @@
 #define DISPLAY_MESSAGES_H
 
 #include <QString>
-#include "core/message.h"
+#include "lirch/core/message.h"
 
 // Oliver, no more of these. *slap*
 enum class display_message_subtype

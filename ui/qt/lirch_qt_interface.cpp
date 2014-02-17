@@ -4,9 +4,10 @@
 // 6) New ignores fire a redraw
 
 #include "ui/qt/lirch_qt_interface.h"
-#include "ui/qt/ui_lirch_qt_interface.h"
 #include "ui/qt/lirch_qlineedit_dialog.h"
 #include "ui/qt/lirch_setup_wizard.h"
+
+#include "ui/qt/ui_lirch_qt_interface.h"
 
 // QT UI
 

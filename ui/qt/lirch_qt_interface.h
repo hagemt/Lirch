@@ -23,15 +23,15 @@
 
 #include "lirch_constants.h"
 
-#include "lirch/ui/lirch_client_pipe.h"
-#include "lirch/ui/qt/lirch_channel.h"
-
 #include "lirch/plugins/messages/blocker_messages.h"
 #include "lirch/plugins/messages/channel_messages.h"
 #include "lirch/plugins/messages/display_messages.h"
 #include "lirch/plugins/messages/edict_messages.h"
 #include "lirch/plugins/messages/logger_messages.h"
 #include "lirch/plugins/messages/nick_messages.h"
+
+#include "ui/lirch_client_pipe.h"
+#include "ui/qt/lirch_channel.h"
 
 namespace Ui {
     class LirchQtInterface;

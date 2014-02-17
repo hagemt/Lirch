@@ -7,7 +7,7 @@
 #ifndef NICK_MESSAGES_H
 #define NICK_MESSAGES_H
 
-#include "core/message.h"
+#include "lirch/core/message.h"
 
 class nick_message : public message_data
 {

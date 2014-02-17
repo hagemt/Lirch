@@ -1,13 +1,14 @@
-#include <vector>
-#include <iostream>
 #include <csignal>
+#include <iostream>
 #include <string>
+#include <vector>
 
 #include <QCoreApplication>
 
-#include "core/message.h"
-#include "core/message_pipe.h"
-#include "core/core_messages.h"
+#include "lirch/core/core_messages.h"
+#include "lirch/core/message.h"
+#include "lirch/core/message_pipe.h"
+
 #include "core/qt/lirch_qtcore.h"
 
 // For preloading

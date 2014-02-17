@@ -13,7 +13,7 @@
 #define NOTIFY_MESSAGES_H
 
 #include <QString>
-#include "core/message.h"
+#include "lirch/core/message.h"
 
 enum class notify_message_subtype
 {

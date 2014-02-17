@@ -14,7 +14,7 @@
 
 #include <QtNetwork>
 
-#include "core/message.h"
+#include "lirch/core/message.h"
 
 
 enum class received_message_subtype

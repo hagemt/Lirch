@@ -1,9 +1,9 @@
+#include "plugins/quip/quip.h"
+
 // This is a plugin for Lirch (see us on GitHub!)
-#include "plugins/lirch_plugin.h"
-#include "plugins/quip.h"
-#include "plugins/quip_messages.h"
-#include "plugins/edict_messages.h"
-#include "plugins/grinder_messages.h"
+#include "lirch/plugins/lirch_plugin.h"
+
+#include "lirch/plugins/messages/edict_messages.h"
 
 // QUIP CLASS FUNCTIONS (constructor and message wrapper)
 

@@ -1,5 +1,5 @@
-#include <thread>
 #include <string>
+#include <thread>
 
 #ifdef _WIN32
 #	include <windows.h>
@@ -7,7 +7,7 @@
 #	include <dlfcn.h>
 #endif
 
-#include "plugin_loader.h"
+#include "lirch/core/plugin_loader.h"
 
 using namespace std;
 
