@@ -3,8 +3,6 @@
 #include <csignal>
 #include <string>
 
-#include <thread>
-
 #include <QCoreApplication>
 
 #include "core/message.h"
@@ -27,8 +25,6 @@ using namespace std;
 
 extern message_pipe in_pipe;
 extern bool verbose;
-
-void run_core(const vector<message> &vm);
 
 void handle_sigint(int)
 {
@@ -113,14 +109,9 @@ int main(int argc, char *argv[])
 		arg+=2;
 	}
 
-	thread t([&app, pp](){
-		run_core(pp);
-		core_notifier notifier;
-		QObject::connect(&notifier, SIGNAL(quit()), &app, SLOT(quit()));
-		notifier.emitQuit();
-	});
-	// Wait until core shutdown
-	core_waiter waiter(t);
-	QObject::connect(&app, SIGNAL(aboutToQuit()), &waiter, SLOT(onQuit()));
-	app.exec();
+	lirch_core core(pp);
+	QObject::connect(&core, SIGNAL(aboutToQuit()), &app, SLOT(quit()));
+	QObject::connect(&app, SIGNAL(aboutToQuit()), &core, SLOT(quit()));
+	return core.exec(app);
+	//return lirch_core(pp).exec(app);
 }
