@@ -7,7 +7,7 @@
 #include <QWidget>
 #include <QWizard>
 
-#include "plugins/logger_messages.h"
+#include "lirch/plugins/messages/logger_messages.h"
 
 namespace Ui {
     class LirchSetupWizard;

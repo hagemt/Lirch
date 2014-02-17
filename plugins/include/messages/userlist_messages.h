@@ -2,10 +2,12 @@
 #define USERLIST_MESSAGES_H_
 
 #include <unordered_map>
-#include <QtCore/QString>
 
-#include "core/message.h"
-#include "user_status.h"
+#include <QString>
+
+#include "lirch/core/message.h"
+
+#include "lirch/plugins/user_status.h"
 
 class userlist_message : public message_data
 {

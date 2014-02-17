@@ -1,4 +1,4 @@
-#include "message_view.h"
+#include "lirch/core/message_view.h"
 
 bool message_pipe::locked_has_message() const
 {

@@ -11,9 +11,9 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QPalette>
+#include <QShowEvent>
 #include <QSet>
 #include <QSettings>
-#include <QShowEvent>
 #include <QString>
 #include <QSystemTrayIcon>
 #include <QThread>
@@ -22,14 +22,16 @@
 #include <QUrl>
 
 #include "lirch_constants.h"
-#include "ui/lirch_client_pipe.h"
-#include "ui/qt/lirch_channel.h"
-#include "plugins/blocker_messages.h"
-#include "plugins/channel_messages.h"
-#include "plugins/edict_messages.h"
-#include "plugins/display_messages.h"
-#include "plugins/logger_messages.h"
-#include "plugins/nick_messages.h"
+
+#include "lirch/ui/lirch_client_pipe.h"
+#include "lirch/ui/qt/lirch_channel.h"
+
+#include "lirch/plugins/messages/blocker_messages.h"
+#include "lirch/plugins/messages/channel_messages.h"
+#include "lirch/plugins/messages/display_messages.h"
+#include "lirch/plugins/messages/edict_messages.h"
+#include "lirch/plugins/messages/logger_messages.h"
+#include "lirch/plugins/messages/nick_messages.h"
 
 namespace Ui {
     class LirchQtInterface;

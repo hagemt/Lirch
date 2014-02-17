@@ -10,7 +10,7 @@
 #include "core/message.h"
 #include "core/message_pipe.h"
 #include "core/core_messages.h"
-#include "core/lirch_qtcore.h"
+#include "core/qt/lirch_qtcore.h"
 
 // For preloading
 

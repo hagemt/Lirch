@@ -1,13 +1,13 @@
+#include <chrono>
 #include <iostream>
 #include <string>
-#include <chrono>
 #include <thread>
 
-#include "core/message.h"
-#include "core/message_pipe.h"
-#include "core/registry.h"
+#include "lirch/core/message.h"
+#include "lirch/core/message_pipe.h"
+#include "lirch/core/registry.h"
 
-#include "plugins/parser.h"
+#include "lirch/plugins/parser.h"
 
 using namespace std;
 

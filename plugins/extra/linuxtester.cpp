@@ -1,14 +1,16 @@
-#include <thread>
 #include <ctime>
 #include <iostream>
+#include <thread>
 
 #include <QtNetwork>
 
-#include "plugins/lirch_plugin.h"
 #include "core/core_messages.h"
-#include "plugins/received_messages.h"
-#include "plugins/userlist_messages.h"
-#include "plugins/user_status.h"
+
+#include "lirch/plugins/lirch_plugin.h"
+#include "lirch/plugins/user_status.h"
+
+#include "lirch/plugins/messages/received_messages.h"
+#include "lirch/plugins/messages/userlist_messages.h"
 
 using namespace std;
 

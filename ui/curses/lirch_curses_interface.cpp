@@ -8,24 +8,29 @@
 	#define	GCC_SCANF
 #endif
 
-#include <curses.h>
 #include <climits>
 #include <cstdio>
-#include <unordered_map>
 #include <cwctype>
+#include <unordered_map>
+
+#include <curses.h>
 
 #include <QString>
 #include <QTextBoundaryFinder>
 
 #include "lirch_constants.h"
-#include "plugins/lirch_plugin.h"
-#include "plugins/display_messages.h"
-#include "plugins/notify_messages.h"
-#include "plugins/edict_messages.h"
-#include "plugins/channel_messages.h"
-#include "ui/line_editor.h"
-#include "core/core_messages.h"
-#include "plugins/QString_hash.h"
+
+#include "lirch/core/core_messages.h"
+
+#include "lirch/plugins/lirch_plugin.h"
+#include "lirch/plugins/hash/QString.h"
+
+#include "lirch/plugins/messages/channel_messages.h"
+#include "lirch/plugins/messages/display_messages.h"
+#include "lirch/plugins/messages/edict_messages.h"
+#include "lirch/plugins/messages/notify_messages.h"
+
+#include "lirch/ui/line_editor.h"
 
 inline char CTRL(char c)
 {

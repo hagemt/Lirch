@@ -6,17 +6,16 @@
  * it then converts them into a display_message, which will be used by the UI and Logger.
  */
 
-
-
-#include <QtCore>
 #include <QSettings>
 
-#include "edict_messages.h"
-#include "display_messages.h"
-#include "received_messages.h"
-#include "notify_messages.h"
-#include "lirch_plugin.h"
 #include "lirch_constants.h"
+
+#include "lirch/plugins/lirch_plugin.h"
+
+#include "lirch/plugins/messages/edict_messages.h"
+#include "lirch/plugins/messages/display_messages.h"
+#include "lirch/plugins/messages/notify_messages.h"
+#include "lirch/plugins/messages/received_messages.h"
 
 using namespace std;
 

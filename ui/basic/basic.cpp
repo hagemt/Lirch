@@ -3,13 +3,15 @@
 
 #include <QString>
 
-#include "plugins/lirch_plugin.h"
-#include "plugins/edict_messages.h"
-#include "plugins/display_messages.h"
-#include "plugins/grinder_messages.h"
-#include "plugins/channel_messages.h"
-#include "plugins/notify_messages.h"
-#include "core/core_messages.h"
+#include "lirch/core/core_messages.h"
+
+#include "lirch/plugins/lirch_plugin.h"
+
+#include "lirch/plugins/messages/channel_messages.h"
+#include "lirch/plugins/messages/display_messages.h"
+#include "lirch/plugins/messages/edict_messages.h"
+#include "lirch/plugins/messages/grinder_messages.h"
+#include "lirch/plugins/messages/notify_messages.h"
 
 using namespace std;
 

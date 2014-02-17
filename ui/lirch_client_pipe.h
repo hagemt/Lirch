@@ -8,13 +8,15 @@
 #include <QString>
 
 #include "lirch_constants.h"
-#include "core/core_messages.h"
-#include "core/message_view.h"
-#include "plugins/channel_messages.h"
-#include "plugins/display_messages.h"
-#include "plugins/edict_messages.h"
-#include "plugins/nick_messages.h"
-#include "plugins/userlist_messages.h"
+
+#include "lirch/core/core_messages.h"
+#include "lirch/core/message_view.h"
+
+#include "lirch/plugins/messages/channel_messages.h"
+#include "lirch/plugins/messages/display_messages.h"
+#include "lirch/plugins/messages/edict_messages.h"
+#include "lirch/plugins/messages/nick_messages.h"
+#include "lirch/plugins/messages/userlist_messages.h"
 
 class LirchClientPipe : public QObject {
     Q_OBJECT

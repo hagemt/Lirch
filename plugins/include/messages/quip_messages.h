@@ -16,7 +16,12 @@
 
 #include <QString>
 
-#include "plugins/quip_constants.h"
+#define LIRCH_MESSAGE_PRIORITY_MIN -32766
+
+#define LIRCH_MESSAGE_TYPE_SHUTDOWN "shutdown"
+#define LIRCH_MESSAGE_TYPE_REGISTRATION_STATUS "registration_status"
+#define LIRCH_MESSAGE_TYPE_QUIP_REQUEST "quip_request"
+#define LIRCH_MESSAGE_TYPE_HANDLER_READY "handler_ready"
 
 // Encapsulates the data required to send a quip message over the network
 class quip_request_data : public message_data
@@ -33,7 +38,7 @@ public:
 	// Allows an easy method for to make message containing this data
 	message to_message() const
 	{
-		std::string quip_type = QObject::tr(LIRCH_MESSAGE_TYPE_QUIP_REQUEST).toStdString();
+		std::string quip_type = "quip_request";
 		quip_request_data *raw_copy = new quip_request_data(*this);
 		return message_create(quip_type, raw_copy);
 	}

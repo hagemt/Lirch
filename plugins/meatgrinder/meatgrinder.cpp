@@ -1,20 +1,20 @@
-#include <unordered_map>
-#include <set>
 #include <iostream>
+#include <set>
+#include <unordered_map>
 
 #include <QString>
 
-#include "lirch_plugin.h"
-#include "QString_hash.h"
-#include "edict_messages.h"
-#include "notify_messages.h"
-#include "grinder_messages.h"
-#include "core/core_messages.h"
-#include "blocker_messages.h"
-#include "notify_messages.h"
-#include "channel_messages.h"
-#include "parser.h"
+#include "lirch/plugins/lirch_plugin.h"
+#include "lirch/plugins/parser.h"
+#include "lirch/plugins/hash/QString.h"
 
+#include "lirch/core/core_messages.h"
+
+#include "lirch/plugins/messages/blocker_messages.h"
+#include "lirch/plugins/messages/channel_messages.h"
+#include "lirch/plugins/messages/edict_messages.h"
+#include "lirch/plugins/messages/grinder_messages.h"
+#include "lirch/plugins/messages/notify_messages.h"
 
 using namespace std;
 

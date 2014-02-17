@@ -25,26 +25,27 @@
  */
 
 
-#include <thread>
+#include <ctime>
 #include <iostream>
+#include <thread>
+#include <unordered_set>
+
 #include <QByteArray>
 #include <QString>
 #include <QtNetwork>
-#include <unordered_set>
-#include <ctime>
 
 #include "lirch_constants.h"
-#include "blocker_messages.h"
-#include "edict_messages.h"
-#include "received_messages.h"
-#include "lirch_plugin.h"
-#include "lirch_constants.h"
-#include "grinder_messages.h"
-#include "notify_messages.h"
-#include "QHostAddress_hash.h"
-#include "nick_messages.h"
-#include "userlist_messages.h"
-#include "channel_messages.h"
+#include "lirch/plugins/lirch_plugin.h"
+#include "lirch/plugins/hash/QHostAddress.h"
+
+#include "lirch/plugins/messages/blocker_messages.h"
+#include "lirch/plugins/messages/edict_messages.h"
+#include "lirch/plugins/messages/received_messages.h"
+#include "lirch/plugins/messages/grinder_messages.h"
+#include "lirch/plugins/messages/notify_messages.h"
+#include "lirch/plugins/messages/nick_messages.h"
+#include "lirch/plugins/messages/userlist_messages.h"
+#include "lirch/plugins/messages/channel_messages.h"
 
 using namespace std;
 

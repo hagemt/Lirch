@@ -1,7 +1,7 @@
 #include <fstream>
 #include <map>
-#include <string>
 #include <memory>
+#include <string>
 
 #include <QDir>
 #include <QFileInfo>
@@ -10,9 +10,11 @@
 #include <QUrl>
 
 #include "lirch_constants.h"
-#include "plugins/display_messages.h"
-#include "plugins/lirch_plugin.h"
-#include "plugins/logger_messages.h"
+
+#include "lirch/plugins/lirch_plugin.h"
+
+#include "lirch/plugins/messages/display_messages.h"
+#include "lirch/plugins/messages/logger_messages.h"
 
 using namespace std;
 

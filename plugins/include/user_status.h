@@ -1,19 +1,20 @@
-#ifndef USER_STATUS_H_
-#define USER_STATUS_H_
+#ifndef __USER_STATUS_H__
+#define __USER_STATUS_H__
 
-#include <QString>
-#include <QHostAddress>
 #include <ctime>
 #include <unordered_set>
 
-#include "QString_hash.h"
+#include <QString>
+#include <QHostAddress>
+
+#include "hash/QString.h"
 
 struct user_status
 {
 	QString nick;
-	std::unordered_set<QString> channels;
 	QHostAddress ip;
 	time_t lastseen;
+	std::unordered_set<QString> channels;
 };
 
-#endif
+#endif // __USER_STATUS_H__

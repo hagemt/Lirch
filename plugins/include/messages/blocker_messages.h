@@ -6,10 +6,12 @@
 #ifndef BLOCKER_MESSAGES_H
 #define BLOCKER_MESSAGES_H
 
-#include <QHostAddress>
 #include <unordered_set>
-#include "core/message.h"
-#include "QHostAddress_hash.h"
+
+#include <QHostAddress>
+
+#include "lirch/core/message.h"
+#include "lirch/plugins/hash/QHostAddress.h"
 
 //this nonsense is needed in order to have our blocklist be searchable
 

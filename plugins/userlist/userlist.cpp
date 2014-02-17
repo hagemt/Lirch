@@ -1,19 +1,22 @@
-#include <thread>
 #include <ctime>
-#include <QSettings>
 #include <iostream>
+#include <thread>
 
-#include "lirch_plugin.h"
-#include "userlist_messages.h"
-#include "user_status.h"
-#include "received_messages.h"
-#include "notify_messages.h"
-#include "grinder_messages.h"
+#include <QSettings>
+
 #include "lirch_constants.h"
-#include "nick_messages.h"
-#include "channel_messages.h"
-#include "blocker_messages.h"
-#include "parser.h"
+
+#include "lirch/plugins/lirch_plugin.h"
+#include "lirch/plugins/parser.h"
+#include "lirch/plugins/user_status.h"
+
+#include "lirch/plugins/messages/blocker_messages.h"
+#include "lirch/plugins/messages/channel_messages.h"
+#include "lirch/plugins/messages/grinder_messages.h"
+#include "lirch/plugins/messages/nick_messages.h"
+#include "lirch/plugins/messages/notify_messages.h"
+#include "lirch/plugins/messages/received_messages.h"
+#include "lirch/plugins/messages/userlist_messages.h"
 
 using namespace std;
 

@@ -1,8 +1,9 @@
 #include <thread>
 #include <iostream>
 
-#include "plugins/lirch_plugin.h"
-#include "plugins/extra/timer.h"
+#include "lirch/plugins/lirch_plugin.h"
+
+#include "lirch/plugins/extra/timer.h"
 
 using namespace std;
 

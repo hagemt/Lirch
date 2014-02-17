@@ -2,15 +2,16 @@
 #define GRINDER_MESSAGES_H_
 
 #include <functional>
-
-#include <QtCore/QString>
-#include <QtCore/QRegExp>
-#include <QStringList>
-#include <unordered_map>
 #include <set>
+#include <unordered_map>
 
-#include "core/message.h"
-#include "QString_hash.h"
+#include <QRegExp>
+#include <QString>
+#include <QStringList>
+
+#include "lirch/core/message.h"
+
+#include "lirch/plugins/hash/QString.h"
 
 enum class register_replacer_subtype
 {

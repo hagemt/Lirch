@@ -2,8 +2,9 @@
 
 #include <QSettings>
 
-#include "plugins/lirch_plugin.h"
-#include "core/required_messages.h"
+#include "lirch/core/required_messages.h"
+
+#include "lirch/plugins/lirch_plugin.h"
 
 using namespace std;
 
