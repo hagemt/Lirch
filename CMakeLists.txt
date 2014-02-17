@@ -6,6 +6,7 @@ include(cmake/Directories.cmake)
 include(cmake/BuildType.cmake)
 include(cmake/BuildSlug.cmake)
 include(cmake/AddPreload.cmake)
+include(cmake/AddPlugin.cmake)
 
 ## CONFIGURATION
 
